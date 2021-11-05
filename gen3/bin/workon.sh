@@ -155,6 +155,8 @@ EOM
     fi
   )
 fi
-
 gen3_log_info "Running: terraform init --backend-config ./backend.tfvars $GEN3_TFSCRIPT_FOLDER/ in $(pwd)"
-gen3_terraform init --backend-config ./backend.tfvars "$GEN3_TFSCRIPT_FOLDER/"
+cd $GEN3_TFSCRIPT_FOLDER
+#gen3_terraform init --backend-config ./backend.tfvars "$GEN3_TFSCRIPT_FOLDER/"
+gen3_terraform init --backend-config ./backend.tfvars
+
