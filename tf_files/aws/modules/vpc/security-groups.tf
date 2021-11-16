@@ -31,7 +31,7 @@ resource "aws_security_group" "local" {
 resource "aws_security_group" "out" {
   name        = "out"
   description = "security group that allow outbound traffics"
-  vpc_id      = "${aws_vpc.main.id}"
+  vpc_id      = "${var.aws_vpc_main_id}"
 
   egress {
     from_port   = 0
@@ -52,7 +52,7 @@ resource "aws_security_group" "proxy" {
   count                  = "${var.deploy_single_proxy ? 1 : 0 }"
   name        = "squid-proxy"
   description = "allow inbound tcp at 3128"
-  vpc_id      = "${aws_vpc.main.id}"
+  vpc_id      = "${var.aws_vpc_main_id}"
 
   ingress {
     from_port   = 0
