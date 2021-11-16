@@ -16,12 +16,13 @@ module "cdis_vpc" {
   vpc_cidr_block                 = "${var.vpc_cidr_block}"
   vpc_name                       = "${var.vpc_name}"
   ssh_key_name                   = "${aws_key_pair.automation_dev.key_name}"
-  peering_cidr                   = "${var.peering_cidr}"
+  #peering_cidr                   = "${var.peering_cidr}"
   csoc_account_id                = "${var.csoc_account_id}"
   organization_name              = "${var.organization_name}"
 
   csoc_managed                   = "${var.csoc_managed}"
-  peering_vpc_id                 = "${var.peering_vpc_id}"
+  # NIEHS: remove
+  #peering_vpc_id                 = "${var.peering_vpc_id}"
 
   #private_kube_route             = "${aws_route_table.private_kube.id}"
   branch                         = "${var.branch}"
