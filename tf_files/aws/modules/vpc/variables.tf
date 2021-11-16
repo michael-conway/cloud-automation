@@ -122,3 +122,7 @@ variable "customer_id" {
 variable "public_subnet_cidr_block" {
   default = ""
 }
+
+variable "aws_vpc_main_id" {
+  default = "vpc-0e518e549da29d5b1"
+}

@@ -6,7 +6,7 @@ module "squid_proxy" {
   env_vpc_name         = "${var.vpc_name}"
   env_public_subnet_id = "${aws_subnet.public.id}"
   env_vpc_cidr         = "${aws_vpc.main.cidr_block}"
-  env_vpc_id           = "${aws_vpc.main.id}"
+  env_vpc_id           = "${var.aws_vpc_main_id}"
   zone_id              = "${aws_route53_zone.main.zone_id}"
   env_log_group        = "${aws_cloudwatch_log_group.main_log_group.name}"
   ssh_key_name         = "${var.ssh_key_name}"
@@ -21,7 +21,7 @@ module "squid-auto" {
   peering_cidr                   = "${var.peering_cidr}"
   env_vpc_name                   = "${var.vpc_name}"
   env_vpc_cidr                   = "${aws_vpc.main.cidr_block}"
-  env_vpc_id                     = "${aws_vpc.main.id}"
+  env_vpc_id                     = "${var.aws_vpc_main_id}"
   env_log_group                  = "${aws_cloudwatch_log_group.main_log_group.name}"
   env_squid_name                 = "squid-auto-${var.vpc_name}"
   #squid_proxy_subnet             = "${cidrsubnet(aws_vpc.main.cidr_block, 4, 1)}"
@@ -79,7 +79,7 @@ module "fence-bot-user" {
 
 
 resource "aws_internet_gateway" "gw" {
-  vpc_id = "${aws_vpc.main.id}"
+  vpc_id = "${var.aws_vpc_main_id}"
 
   tags = {
     Name         = "${var.vpc_name}-igw"
@@ -100,7 +100,7 @@ resource "aws_nat_gateway" "nat_gw" {
 }
 
 resource "aws_route_table" "public" {
-  vpc_id = "${aws_vpc.main.id}"
+  vpc_id = "${var.aws_vpc_main_id}"
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -150,7 +150,7 @@ resource "aws_default_route_table" "default" {
 }
 
 resource "aws_main_route_table_association" "default" {
-  vpc_id         = "${aws_vpc.main.id}"
+  vpc_id         = "${var.aws_vpc_main_id}"
   route_table_id = "${aws_default_route_table.default.id}"
 }
 
@@ -161,7 +161,7 @@ resource "aws_route_table_association" "public" {
 
 
 resource "aws_subnet" "public" {
-  vpc_id                  = "${aws_vpc.main.id}"
+  vpc_id                  = "${var.aws_vpc_main_id}"
   #cidr_block              = "${cidrsubnet(var.vpc_cidr_block,4,0)}"
   #cidr_block              = "${var.network_expansion ? cidrsubnet(var.vpc_cidr_block,5,2) : cidrsubnet(var.vpc_cidr_block,4,0)}"
   cidr_block               = "${var.public_subnet_cidr_block}"
@@ -213,7 +213,7 @@ resource "aws_route53_zone" "main" {
   name    = "internal.io"
   comment = "internal dns server for ${var.vpc_name}"
   vpc {
-    vpc_id  = "${aws_vpc.main.id}"
+    vpc_id  = "${var.aws_vpc_main_id}"
   }
   
   tags = {
@@ -227,7 +227,7 @@ resource "aws_route53_zone" "main" {
 #resource "aws_vpc_peering_connection" "vpcpeering" {
 #  peer_owner_id = "${var.csoc_managed ? var.csoc_account_id : data.aws_caller_identity.current.account_id}"
 #  peer_vpc_id   = "${var.peering_vpc_id}"
-#  vpc_id        = "${aws_vpc.main.id}"
+#  vpc_id        = "${var.aws_vpc_main_id}"
 #  auto_accept   = true
 
 #  tags = {
