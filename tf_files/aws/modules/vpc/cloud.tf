@@ -74,6 +74,10 @@ resource "aws_vpc" "main" {
   lifecycle {
     ignore_changes = ["tags"]
   }
+
+  # NIEHS: test if this prevents the vpc from starting
+  create_vpc = false
+  
 }
 
 
