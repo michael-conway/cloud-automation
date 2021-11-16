@@ -14,3 +14,7 @@ data "aws_caller_identity" "current" {}
 #    values = ["private*"]
 #  }
 #}
+
+data "aws_vpc" "main" {
+ id = "default-vpc-gen3"
+}
