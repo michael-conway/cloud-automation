@@ -20,7 +20,7 @@ output "vpc_id" {
 }
 
 output "vpc_cidr_block" {
-  value = "${aws_vpc.main.cidr_block}"
+  value = "${var.aws_vpc_main_cidr_block}"
 }
 
 output "public_route_table_id" {

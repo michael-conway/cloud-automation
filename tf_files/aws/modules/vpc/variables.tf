@@ -133,3 +133,7 @@ variable "aws_vpc_main_id" {
 variable "aws_vpc_main_cidr_block" {
   default = "172.31.0.0/20"
 }
+
+variable "aws_vpc_main_default_route_table_id" {
+  default = "1rtb-0c4dc9ca64ce15858"
+}
