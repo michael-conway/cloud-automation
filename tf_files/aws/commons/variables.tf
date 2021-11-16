@@ -437,6 +437,3 @@ variable "private_kube_cidr_block" {
   default = ""
 }
 
-variable "public_subnet_cidr_block" {
-  default = ""
-}

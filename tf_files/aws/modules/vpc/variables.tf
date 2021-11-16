@@ -118,3 +118,7 @@ variable "activation_id" {
 variable "customer_id" {
   default = ""
 }
+
+variable "public_subnet_cidr_block" {
+  default = ""
+}
