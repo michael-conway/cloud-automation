@@ -49,9 +49,9 @@ output "ssh_key_name" {
 }
 
 # NIEHS: remove
-output "vpc_peering_id" {
-  value = "${aws_vpc_peering_connection.vpcpeering.id}"
-}
+#output "vpc_peering_id" {
+#  value = "${aws_vpc_peering_connection.vpcpeering.id}"
+#}
 
 output "es_user_key" {
   value = "${aws_iam_access_key.es_user_key.secret}"

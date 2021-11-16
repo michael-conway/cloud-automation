@@ -112,11 +112,11 @@ resource "aws_route_table" "public" {
   }
 
   # NIEHS: remove
-  route {
+  #route {
     #from the commons vpc to the csoc vpc via the peering connection
-    cidr_block                = "${var.peering_cidr}"
-    vpc_peering_connection_id = "${aws_vpc_peering_connection.vpcpeering.id}"
-  }
+    #cidr_block                = "${var.peering_cidr}"
+    #vpc_peering_connection_id = "${aws_vpc_peering_connection.vpcpeering.id}"
+  #}
 
   tags = {
     Name         = "main"
@@ -140,11 +140,11 @@ resource "aws_default_route_table" "default" {
   default_route_table_id = "${aws_vpc.main.default_route_table_id}"
 
   # NIEHS: remove
-  route {
-    #from the commons vpc to the csoc vpc via the peering connection
-    cidr_block                = "${var.peering_cidr}"
-    vpc_peering_connection_id = "${aws_vpc_peering_connection.vpcpeering.id}"
-  }
+  #route {
+  #  #from the commons vpc to the csoc vpc via the peering connection
+  #  cidr_block                = "${var.peering_cidr}"
+  #  vpc_peering_connection_id = "${aws_vpc_peering_connection.vpcpeering.id}"
+  #}
 
   tags = {
     Name         = "default table"
@@ -227,27 +227,27 @@ resource "aws_route53_zone" "main" {
 
 # NIEHS: remove this, we will not be doing vpc peering
 # this is for vpc peering
-resource "aws_vpc_peering_connection" "vpcpeering" {
-  peer_owner_id = "${var.csoc_managed ? var.csoc_account_id : data.aws_caller_identity.current.account_id}"
-  peer_vpc_id   = "${var.peering_vpc_id}"
-  vpc_id        = "${aws_vpc.main.id}"
-  auto_accept   = true
+#resource "aws_vpc_peering_connection" "vpcpeering" {
+#  peer_owner_id = "${var.csoc_managed ? var.csoc_account_id : data.aws_caller_identity.current.account_id}"
+#  peer_vpc_id   = "${var.peering_vpc_id}"
+#  vpc_id        = "${aws_vpc.main.id}"
+#  auto_accept   = true
 
-  tags = {
-    Name         = "VPC Peering between ${var.vpc_name} and adminVM vpc"
-    Environment  = "${var.vpc_name}"
-    Organization = "${var.organization_name}"
-  }
-}
+#  tags = {
+#    Name         = "VPC Peering between ${var.vpc_name} and adminVM vpc"
+#    Environment  = "${var.vpc_name}"
+#    Organization = "${var.organization_name}"
+#  }
+#}
 
 
 # NIEHS: remove
-resource "aws_route" "default_csoc" {
-  count = "${var.csoc_managed ? 0 : 1}"
-  route_table_id            = "${data.aws_route_tables.control_routing_table.ids[count.index]}"
-  destination_cidr_block    = "${var.vpc_cidr_block}"
-  vpc_peering_connection_id = "${aws_vpc_peering_connection.vpcpeering.id}"
-}
+#resource "aws_route" "default_csoc" {
+#  count = "${var.csoc_managed ? 0 : 1}"
+#  route_table_id            = "${data.aws_route_tables.control_routing_table.ids[count.index]}"
+#  destination_cidr_block    = "${var.vpc_cidr_block}"
+#  vpc_peering_connection_id = "${aws_vpc_peering_connection.vpcpeering.id}"
+#}
 
 ##to be used by arranger when accessing the ES
 resource "aws_iam_user" "es_user" {
