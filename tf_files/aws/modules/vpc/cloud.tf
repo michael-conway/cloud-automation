@@ -167,7 +167,8 @@ resource "aws_route_table_association" "public" {
 resource "aws_subnet" "public" {
   vpc_id                  = "${aws_vpc.main.id}"
   #cidr_block              = "${cidrsubnet(var.vpc_cidr_block,4,0)}"
-  cidr_block              = "${var.network_expansion ? cidrsubnet(var.vpc_cidr_block,5,2) : cidrsubnet(var.vpc_cidr_block,4,0)}"
+  #cidr_block              = "${var.network_expansion ? cidrsubnet(var.vpc_cidr_block,5,2) : cidrsubnet(var.vpc_cidr_block,4,0)}"
+  cidr_block               = "${var.public_subnet_cidr_block}"
   map_public_ip_on_launch = true
 
   # kube_ subnets are in availability zone [0], so put this in [1]

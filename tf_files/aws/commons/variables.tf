@@ -427,10 +427,16 @@ variable "customer_id" {
   default = ""
 }
 
+# NIEHS: added these vars for tfvars replacing cidr calcs
+
 variable "private_db_alt_cidr_block" {
   default = ""
 }
 
 variable "private_kube_cidr_block" {
+  default = ""
+}
+
+variable "public_subnet_cidr_block" {
   default = ""
 }
