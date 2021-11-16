@@ -1,7 +1,7 @@
 resource "aws_security_group" "local" {
   name        = "local"
   description = "security group that only allow internal tcp traffics"
-  vpc_id      = "${aws_vpc.main.id}"
+  vpc_id      = "${var.aws_vpc_main_id}"
 
   ingress {
     from_port   = 0

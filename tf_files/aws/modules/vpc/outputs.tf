@@ -16,7 +16,7 @@ output "zone_name" {
 }
 
 output "vpc_id" {
-  value = "${aws_vpc.main.id}"
+  value = "${var.aws_vpc_main_id}"
 }
 
 output "vpc_cidr_block" {
