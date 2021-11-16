@@ -62,7 +62,7 @@ module "fence-bot-user" {
 }
 
 # NIEHS: set to default vpc per: 
-resource "aws_vpc" "default" {
+resource "aws_vpc" "main" {
   cidr_block           = "${var.vpc_cidr_block}"
   enable_dns_hostnames = true
 
