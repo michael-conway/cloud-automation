@@ -165,7 +165,7 @@ resource "aws_subnet" "private_db_alt" {
   #cidr_block                  = "${cidrsubnet(var.vpc_cidr_block,4,3)}"
   #cidr_block                  = "${var.network_expansion ? cidrsubnet(var.vpc_cidr_block,5,1) : cidrsubnet(var.vpc_cidr_block,4,3)}"
   # NIEHS: made private_db_alt_cidr_block a tfvar
-  cidr_block = "${var.private_kube_cidr_block}"
+  cidr_block = "${var.private_db_alt_cidr_block}"
   availability_zone           = "${data.aws_availability_zones.available.names[1]}"
   map_public_ip_on_launch     = false
 

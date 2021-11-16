@@ -426,3 +426,11 @@ variable "activation_id" {
 variable "customer_id" {
   default = ""
 }
+
+variable "private_db_alt_cidr_block" {
+  default = ""
+}
+
+variable "private_kube_cidr_block" {
+  default = ""
+}
