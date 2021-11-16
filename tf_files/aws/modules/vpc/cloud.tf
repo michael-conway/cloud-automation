@@ -61,7 +61,8 @@ module "fence-bot-user" {
   bucket_access_arns   = "${var.fence-bot_bucket_access_arns}"
 }
 
-resource "aws_vpc" "main" {
+# NIEHS: set to default vpc per: 
+resource "aws_vpc" "default" {
   cidr_block           = "${var.vpc_cidr_block}"
   enable_dns_hostnames = true
 
@@ -110,6 +111,7 @@ resource "aws_route_table" "public" {
     gateway_id = "${aws_internet_gateway.gw.id}"
   }
 
+  # NIEHS: remove
   route {
     #from the commons vpc to the csoc vpc via the peering connection
     cidr_block                = "${var.peering_cidr}"
@@ -137,6 +139,7 @@ resource "aws_eip" "nat_gw" {
 resource "aws_default_route_table" "default" {
   default_route_table_id = "${aws_vpc.main.default_route_table_id}"
 
+  # NIEHS: remove
   route {
     #from the commons vpc to the csoc vpc via the peering connection
     cidr_block                = "${var.peering_cidr}"
@@ -222,6 +225,7 @@ resource "aws_route53_zone" "main" {
   }
 }
 
+# NIEHS: remove this, we will not be doing vpc peering
 # this is for vpc peering
 resource "aws_vpc_peering_connection" "vpcpeering" {
   peer_owner_id = "${var.csoc_managed ? var.csoc_account_id : data.aws_caller_identity.current.account_id}"
@@ -237,7 +241,7 @@ resource "aws_vpc_peering_connection" "vpcpeering" {
 }
 
 
-
+# NIEHS: remove
 resource "aws_route" "default_csoc" {
   count = "${var.csoc_managed ? 0 : 1}"
   route_table_id            = "${data.aws_route_tables.control_routing_table.ids[count.index]}"

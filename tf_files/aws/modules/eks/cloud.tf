@@ -155,7 +155,7 @@ resource "aws_route_table" "eks_private" {
   }
 }
 
-
+# NIEHS: remove for peering
 resource "aws_route" "for_peering" {
   route_table_id            = "${aws_route_table.eks_private.id}"
   destination_cidr_block    = "${var.peering_cidr}"

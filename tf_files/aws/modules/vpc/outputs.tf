@@ -31,7 +31,6 @@ output "gateway_id" {
   value = "${aws_internet_gateway.gw.id}"
 }
 
-
 output "public_subnet_id" {
   value = "${aws_subnet.public.id}"
 }
@@ -49,6 +48,7 @@ output "ssh_key_name" {
   value = "${var.ssh_key_name}"
 }
 
+# NIEHS: remove
 output "vpc_peering_id" {
   value = "${aws_vpc_peering_connection.vpcpeering.id}"
 }
