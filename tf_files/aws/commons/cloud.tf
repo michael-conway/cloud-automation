@@ -130,14 +130,14 @@ resource "aws_route_table" "private_kube" {
 #  depends_on                = ["aws_route_table.private_kube"]
 #}
 
-
-resource "aws_route" "for_peering" {
-  route_table_id            = "${aws_route_table.private_kube.id}"
-  destination_cidr_block    = "${var.peering_cidr}"
-  # NIEHS - remove
-  #vpc_peering_connection_id = "${module.cdis_vpc.vpc_peering_id}"
-  depends_on                = ["aws_route_table.private_kube"]
-}
+# NIEHS-remove
+#resource "aws_route" "for_peering" {
+#  route_table_id            = "${aws_route_table.private_kube.id}"
+#  destination_cidr_block    = "${var.peering_cidr}"
+#  # NIEHS - remove
+#  #vpc_peering_connection_id = "${module.cdis_vpc.vpc_peering_id}"
+#  depends_on                = ["aws_route_table.private_kube"]
+#}
 
 resource "aws_route_table_association" "private_kube" {
   subnet_id                   = "${aws_subnet.private_kube.id}"

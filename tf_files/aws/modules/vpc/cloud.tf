@@ -77,16 +77,16 @@ module "fence-bot-user" {
 #  }
 #}
 
+# NIEHS - remove
+#resource "aws_internet_gateway" "gw" {
+#  vpc_id = "${var.aws_vpc_main_id}"
 
-resource "aws_internet_gateway" "gw" {
-  vpc_id = "${var.aws_vpc_main_id}"
-
-  tags = {
-    Name         = "${var.vpc_name}-igw"
-    Environment  = "${var.vpc_name}"
-    Organization = "${var.organization_name}"
-  }
-}
+ # tags = {
+ #   Name         = "${var.vpc_name}-igw"
+ #   Environment  = "${var.vpc_name}"
+ #   Organization = "${var.organization_name}"
+ # }
+# }
 
 resource "aws_nat_gateway" "nat_gw" {
   allocation_id = "${aws_eip.nat_gw.id}"
@@ -104,7 +104,7 @@ resource "aws_route_table" "public" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.gw.id}"
+    gateway_id = "${var.aws_internet_gateway_id}"
   }
 
   # NIEHS: remove
