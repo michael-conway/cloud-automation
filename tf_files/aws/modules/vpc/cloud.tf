@@ -61,7 +61,7 @@ module "fence-bot-user" {
   bucket_access_arns   = "${var.fence-bot_bucket_access_arns}"
 }
 
-# NIEHS: set to default vpc per: 
+# NIEHS: - remove vpc creation 
 resource "aws_vpc" "main" {
   cidr_block           = "${var.vpc_cidr_block}"
   enable_dns_hostnames = true
