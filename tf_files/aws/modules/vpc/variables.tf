@@ -137,3 +137,8 @@ variable "aws_vpc_main_cidr_block" {
 variable "aws_vpc_main_default_route_table_id" {
   default = "1rtb-0c4dc9ca64ce15858"
 }
+
+variable "aws_internet_gateway_id" {
+  description = "internet gateway id"
+  default = ""
+}
