@@ -16,11 +16,11 @@ output "zone_name" {
 }
 
 output "vpc_id" {
-  value = "${aws_vpc.main.id}"
+  value = "${var.aws_vpc_main_id}"
 }
 
 output "vpc_cidr_block" {
-  value = "${aws_vpc.main.cidr_block}"
+  value = "${var.aws_vpc_main_cidr_block}"
 }
 
 output "public_route_table_id" {

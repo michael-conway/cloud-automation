@@ -119,6 +119,21 @@ variable "customer_id" {
   default = ""
 }
 
+
+# NIEHS: added variables
+
 variable "public_subnet_cidr_block" {
   default = ""
+}
+
+variable "aws_vpc_main_id" {
+  default = "vpc-0e518e549da29d5b1"
+}
+
+variable "aws_vpc_main_cidr_block" {
+  default = "172.31.0.0/20"
+}
+
+variable "aws_vpc_main_default_route_table_id" {
+  default = "1rtb-0c4dc9ca64ce15858"
 }
