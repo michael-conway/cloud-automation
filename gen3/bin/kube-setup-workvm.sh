@@ -75,13 +75,13 @@ if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
   # install nodejs
   if ! which node > /dev/null 2>&1; then
     curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-    sudo -E apt-get update
-    sudo -E apt-get install -y nodejs
+    sudo -E yum update
+    sudo -E yum install -y nodejs
   fi
   if [[ ! -f /etc/apt/sources.list.d/google-cloud-sdk.list ]]; then
     # might need to uninstall gcloud installed from ubuntu repo
     if which gcloud > /dev/null 2>&1; then
-      sudo -E apt-get remove -y google-cloud-sdk
+      sudo -E yum remove -y google-cloud-sdk
     fi
   fi
   if ! which psql > /dev/null 2>&1; then
@@ -93,19 +93,19 @@ if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
         echo "deb http://apt.postgresql.org/pub/repos/apt/ ${DISTRO}-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
       fi
       wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-      sudo -E apt-get update
-      sudo -E apt-get install -y postgresql-client-9.6
+      sudo -E yum update
+      sudo -E yum install -y postgresql-client-9.6
     )
   fi
   # gen3sdk currently requires this
-  sudo -E apt-get install -y libpq-dev
+  sudo -E yum install -y libpq-dev
   if ! which gcloud > /dev/null 2>&1; then
     (
       export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
       sudo -E bash -c "echo 'deb https://packages.cloud.google.com/apt $CLOUD_SDK_REPO main' > /etc/apt/sources.list.d/google-cloud-sdk.list"
       curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo -E apt-key add -
-      sudo -E apt-get update
-      sudo -E apt-get install -y google-cloud-sdk \
+      sudo -E yum update
+      sudo -E yum install -y google-cloud-sdk \
           google-cloud-sdk-cbt \
           kubectl
       if [[ -f /usr/local/bin/kubectl && -f /usr/bin/kubectl ]]; then  # pref dpkg managed kubectl
