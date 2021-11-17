@@ -29,8 +29,8 @@ fi
 
 if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
   # -E passes through *_proxy environment
-  sudo -E apt-get update
-  sudo -E apt-get install -y git jq pwgen python-dev python-pip unzip python3-dev python3-pip python3-venv 
+  sudo -E yum update
+  sudo -E yum install -y git jq pwgen python-dev python-pip unzip python3-dev python3-pip python3-venv 
   
   ( # subshell
     # install aws cli v2 - https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
