@@ -88,11 +88,11 @@ if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
     (
     
       sudo -E yum update
-      sudo -E yum install -y postgresql-client-9.6
+      sudo -E yum install -y postgresql
     )
   fi
   # gen3sdk currently requires this
-  sudo -E yum install -y libpq-dev
+  sudo -E yum install -y postgresql-devel
   if ! which gcloud > /dev/null 2>&1; then
     (
       sudo -E yum update
