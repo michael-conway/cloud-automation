@@ -30,7 +30,7 @@ fi
 if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
   # -E passes through *_proxy environment
   sudo -E yum update
-  sudo -E yum install -y git jq pwgen python-dev python-pip unzip python3-dev python3-pip python3-venv 
+  sudo -E yum install -y git jq pwgen python-dev python-pip unzip python3-dev python3-pip python3-venv redhat-lsb 
   
   ( # subshell
     # install aws cli v2 - https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
@@ -74,7 +74,7 @@ if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
 
   # install nodejs
   if ! which node > /dev/null 2>&1; then
-    curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+    curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
     sudo -E yum update
     sudo -E yum install -y nodejs
   fi
