@@ -86,13 +86,7 @@ if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
   fi
   if ! which psql > /dev/null 2>&1; then
     (
-      # use the postgres dpkg server
-      # https://www.postgresql.org/download/linux/ubuntu/
-      DISTRO="$(lsb_release -c -s)"  # ex - xenial
-      if [[ ! -f /etc/apt/sources.list.d/pgdg.list ]]; then
-        echo "deb http://apt.postgresql.org/pub/repos/apt/ ${DISTRO}-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-      fi
-      wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+    
       sudo -E yum update
       sudo -E yum install -y postgresql-client-9.6
     )
@@ -101,9 +95,6 @@ if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
   sudo -E yum install -y libpq-dev
   if ! which gcloud > /dev/null 2>&1; then
     (
-      export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
-      sudo -E bash -c "echo 'deb https://packages.cloud.google.com/apt $CLOUD_SDK_REPO main' > /etc/apt/sources.list.d/google-cloud-sdk.list"
-      curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo -E apt-key add -
       sudo -E yum update
       sudo -E yum install -y google-cloud-sdk \
           google-cloud-sdk-cbt \
