@@ -96,7 +96,7 @@ if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
   if ! which gcloud > /dev/null 2>&1; then
     (
       sudo -E yum update
-      sudo -E yum install kubectl
+      sudo -E yum install -y kubectl
 
       sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
       [google-cloud-sdk]
@@ -109,7 +109,7 @@ if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
         https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOM
 
-      sudo dnf install google-cloud-sdk
+      sudo dnf install -y google-cloud-sdk
 
       if [[ -f /usr/local/bin/kubectl && -f /usr/bin/kubectl ]]; then  # pref dpkg managed kubectl
         sudo -E /bin/rm /usr/local/bin/kubectl
