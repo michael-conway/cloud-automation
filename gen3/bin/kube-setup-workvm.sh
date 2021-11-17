@@ -96,9 +96,21 @@ if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
   if ! which gcloud > /dev/null 2>&1; then
     (
       sudo -E yum update
-      sudo -E yum install -y google-cloud-sdk \
-          google-cloud-sdk-cbt \
-          kubectl
+      sudo -E yum install kubectl
+
+      sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
+      [google-cloud-sdk]
+      name=Google Cloud SDK
+      baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
+      enabled=1
+      gpgcheck=1
+      repo_gpgcheck=0
+      gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOM
+
+      sudo dnf install google-cloud-sdk
+
       if [[ -f /usr/local/bin/kubectl && -f /usr/bin/kubectl ]]; then  # pref dpkg managed kubectl
         sudo -E /bin/rm /usr/local/bin/kubectl
       fi
