@@ -109,7 +109,7 @@ if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
         https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOM
 
-      sudo dnf install -y google-cloud-sdk
+      sudo yum install -y google-cloud-sdk
 
       if [[ -f /usr/local/bin/kubectl && -f /usr/bin/kubectl ]]; then  # pref dpkg managed kubectl
         sudo -E /bin/rm /usr/local/bin/kubectl
