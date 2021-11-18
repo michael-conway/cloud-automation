@@ -153,10 +153,6 @@ resource "aws_route_table_association" "public" {
   route_table_id = "${aws_route_table.public.id}"
 }
 
-output "public_cidr" {
-  value = "${var.public_subnet_cidr_block}"
-}
-
 resource "aws_subnet" "public" {
   vpc_id                  = "${var.aws_vpc_main_id}"
   #cidr_block              = "${cidrsubnet(var.aws_vpc_main_cidr_block,4,0)}"

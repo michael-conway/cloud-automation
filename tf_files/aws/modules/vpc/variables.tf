@@ -123,7 +123,7 @@ variable "customer_id" {
 # NIEHS: added variables
 
 variable "public_subnet_cidr_block" {
-  default = ""
+  default = "172.31.18.0/24"
 }
 
 variable "aws_vpc_main_id" {
