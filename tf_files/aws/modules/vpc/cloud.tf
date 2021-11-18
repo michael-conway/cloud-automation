@@ -142,10 +142,11 @@ resource "aws_eip" "nat_gw" {
 #  }
 #}
 
-resource "aws_main_route_table_association" "default" {
-  vpc_id         = "${var.aws_vpc_main_id}"
-  route_table_id = "${aws_default_route_table.default.id}"
-}
+# NIEHS-remove
+#resource "aws_main_route_table_association" "default" {
+#  vpc_id         = "${var.aws_vpc_main_id}"
+#  route_table_id = "${aws_default_route_table.default.id}"
+#}
 
 resource "aws_route_table_association" "public" {
   subnet_id      = "${aws_subnet.public.id}"
