@@ -125,8 +125,8 @@ resource "aws_eip" "nat_gw" {
 }
 
 
-resource "aws_default_route_table" "default" {
-  default_route_table_id = "${var.aws_vpc_main_default_route_table_id}"
+#resource "aws_default_route_table" "default" {
+#  default_route_table_id = "${var.aws_vpc_main_default_route_table_id}"
 
   # NIEHS: remove
   #route {
@@ -135,12 +135,12 @@ resource "aws_default_route_table" "default" {
   #  vpc_peering_connection_id = "${aws_vpc_peering_connection.vpcpeering.id}"
   #}
 
-  tags = {
-    Name         = "default table"
-    Environment  = "${var.vpc_name}"
-    Organization = "${var.organization_name}"
-  }
-}
+#  tags = {
+#    Name         = "default table"
+#    Environment  = "${var.vpc_name}"
+#    Organization = "${var.organization_name}"
+#  }
+#}
 
 resource "aws_main_route_table_association" "default" {
   vpc_id         = "${var.aws_vpc_main_id}"
