@@ -140,5 +140,5 @@ variable "aws_vpc_main_default_route_table_id" {
 
 variable "aws_internet_gateway_id" {
   description = "internet gateway id"
-  default = ""
+  default = "igw-08ee4a556301f736c"
 }
