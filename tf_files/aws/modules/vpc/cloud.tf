@@ -101,9 +101,11 @@ resource "aws_nat_gateway" "nat_gw" {
 
 resource "aws_route_table" "public" {
   vpc_id = "${var.aws_vpc_main_id}"
-
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${var.aws_internet_gateway_id}"
+  
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${var.aws_internet_gateway_id}"
+  }
 
   tags = {
     Name         = "main"
