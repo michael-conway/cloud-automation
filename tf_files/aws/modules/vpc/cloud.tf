@@ -102,17 +102,8 @@ resource "aws_nat_gateway" "nat_gw" {
 resource "aws_route_table" "public" {
   vpc_id = "${var.aws_vpc_main_id}"
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = "${var.aws_internet_gateway_id}"
-  }
-
-  # NIEHS: remove
-  #route {
-    #from the commons vpc to the csoc vpc via the peering connection
-    #cidr_block                = "${var.peering_cidr}"
-    #vpc_peering_connection_id = "${aws_vpc_peering_connection.vpcpeering.id}"
-  #}
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = "${var.aws_internet_gateway_id}"
 
   tags = {
     Name         = "main"
