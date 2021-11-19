@@ -114,3 +114,11 @@ variable "activation_id" {
 variable "customer_id" {
   default = ""
 }
+
+variable "eks_private" {
+  default = ""
+}
+
+variable "eks_public" {
+  default = ""
+}
