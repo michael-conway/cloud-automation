@@ -187,7 +187,7 @@ resource "aws_route_table_association" "private_kube" {
   depends_on     = ["aws_subnet.eks_private"]
 }
 
-
+# NIEHS: might need to add a rule for EKS
 resource "aws_security_group" "eks_control_plane_sg" {
   name        = "${var.vpc_name}-control-plane"
   description = "Cluster communication with worker nodes [${var.vpc_name}]"
