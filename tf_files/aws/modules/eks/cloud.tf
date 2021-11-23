@@ -91,7 +91,7 @@ resource "aws_subnet" "eks_private" {
   vpc_id                  = "${data.aws_vpc.the_vpc.id}"
   #cidr_block              = "${var.workers_subnet_size == 23 ? cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 3 , ( 2 + count.index )) : cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 4 , ( 7 + count.index )) }"
   #cidr_block              = "${var.workers_subnet_size == 22 ? cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 2 , ( 1 + count.index )) : var.workers_subnet_size == 23 ? cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 3 , ( 2 + count.index )) : cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 4 , ( 7 + count.index )) }"
-  cidr_block               = "${var.eks_private}"
+  cidr_block               = "cidrsubnet(${var.eks_private}, 4, count.index)"
   availability_zone       = "${random_shuffle.az.result[count.index]}"
   map_public_ip_on_launch = false
 
@@ -119,7 +119,7 @@ resource "aws_subnet" "eks_public" {
   vpc_id                  = "${data.aws_vpc.the_vpc.id}"
   #cidr_block              = "${cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 4 , ( 10 + count.index ))}"
   #cidr_block              = "${var.workers_subnet_size == 22 ? cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 5 , ( 4 + count.index )) : cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 4 , ( 10 + count.index ))}"
-  cidr_block               = "${var.eks_public}"
+  cidr_block               = "cidrsubnet(${var.eks_public}, 4, count.index)"
   map_public_ip_on_launch = true
   availability_zone       = "${random_shuffle.az.result[count.index]}"
 
