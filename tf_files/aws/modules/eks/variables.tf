@@ -125,9 +125,9 @@ variable "customer_id" {
 }
 
 variable "eks_private" {
-  default = ""
+  default = "172.31.19.0/24"
 }
 
 variable "eks_public" {
-  default = ""
+  default = "172.31.20.0/24"
 }
