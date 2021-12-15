@@ -165,13 +165,13 @@ spec:
               mountPath: "/usr/local/share/ca-certificates/cdis-ca.crt"
               subPath: "ca.pem"
           imagePullPolicy: Always
-          resources:
-            requests:
-              cpu: 1
-              memory: 1024Mi
-            limits:
-              cpu: 2
-              memory: 2048Mi
+#          resources:
+#            requests:
+#              cpu: 1
+#              memory: 1024Mi
+#            limits:
+#              cpu: 2
+#              memory: 2048Mi
           livenessProbe:
             httpGet:
               path: /_status?timeout=20

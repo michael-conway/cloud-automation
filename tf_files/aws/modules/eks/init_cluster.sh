@@ -11,11 +11,12 @@ fi
 # calico=$${calico:-1.7.5}
 calico="1.7.5"
 
-calico_yaml="https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/v$${calico}/config/v$(echo $${calico} | sed -e 's/\.[0-9]\+$//')/calico.yaml"
+#calico_yaml="https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/v$${calico}/config/v$(echo $${calico} | sed -e 's/\.[0-9]\+$//')/calico.yaml"
+calico_yaml=https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/v1.10.1/config/v1.7/calico.yaml
 
 #KUBECTL=$(bash which kubectl)
 if ! $(command -v kubectl) --kubeconfig "${kubeconfig_path}" get daemonsets -n kube-system calico-node > /dev/null 2>&1; then
-  $(command -v kubectl) --kubeconfig "${kubeconfig_path}" apply -f $${calico_yaml}
+  $(command -v kubectl) --kubeconfig "${kubeconfig_path}" apply -f https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/v1.10.1/config/v1.7/calico.yaml
 fi
 
 if ! $(command -v kubectl) --kubeconfig "${kubeconfig_path}" get configmap -n kube-system aws-auth > /dev/null 2>&1; then
