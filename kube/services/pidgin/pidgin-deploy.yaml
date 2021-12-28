@@ -105,7 +105,7 @@ spec:
               mountPath: "/mnt/ssl/cdis-ca.crt"
               subPath: "ca.pem"
           imagePullPolicy: Always
-          resources:
-            limits:
-              cpu: 0.8
-              memory: 512Mi
+#          resources:
+#            limits:
+#              cpu: 0.8
+#              memory: 512Mi

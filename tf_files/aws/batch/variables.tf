@@ -82,3 +82,8 @@ variable "sqs_queue_name" {
 variable "output_bucket_name" {
   description = "output bucket"
 }
+
+variable "aws_internet_gateway_id" {
+  description = "internet gateway id"
+  default = ""
+}

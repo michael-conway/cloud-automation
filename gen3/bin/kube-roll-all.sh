@@ -19,6 +19,8 @@ gen3_load "gen3/lib/kube-setup-init"
 # Set flag, so we can avoid doing things over and over
 export GEN3_ROLL_ALL=true
 
+gen3_log_info "running sequence setup-workvm through jupyter"
+
 if [[ "$GEN3_ROLL_FAST" != "true" ]]; then
   gen3 kube-setup-workvm
   # kube-setup-roles runs before kube-setup-secrets -
@@ -32,6 +34,8 @@ else
 fi
 
 gen3_log_info "using manifest at $(g3k_manifest_path)"
+
+gen3_log_info "labeling pods"
 
 # label pods without release version
 for name in $(g3kubectl get pods -l 'release!=production,release!=canary' -o jsonpath="{..metadata.name}"); do
@@ -53,11 +57,17 @@ gen3 kube-setup-networkpolicy disable
 #
 # Hopefull core secrets/config in place - start bringing up services
 #
+
+gen3_log_info "setup indexd"
+
 if g3k_manifest_lookup .versions.indexd 2> /dev/null; then
   gen3 kube-setup-indexd &
 else
   gen3_log_info "no manifest entry for indexd"
 fi
+
+
+gen3_log_info "setup arborist"
 
 if g3k_manifest_lookup .versions.arborist 2> /dev/null; then
   gen3 kube-setup-arborist || gen3_log_err "arborist setup failed?"
@@ -65,17 +75,24 @@ else
   gen3_log_info "no manifest entry for arborist"
 fi
 
+gen3_log_info "setup audit"
+
 if g3k_manifest_lookup '.versions["audit-service"]' 2> /dev/null; then
   gen3 kube-setup-audit-service
 else
   gen3_log_info "not deploying audit-service - no manifest entry for .versions.audit-service"
 fi
 
+gen3_log_info "setup auspice"
+
 if g3k_manifest_lookup .versions.auspice 2> /dev/null; then
   gen3 kube-setup-auspice
 else
   gen3_log_info "not deploying auspice - no manifest entry for .versions.auspice"
 fi
+
+
+gen3_log_info "setup fence"
 
 if g3k_manifest_lookup .versions.fence 2> /dev/null; then
   # data ecosystem sub-commons may not deploy fence ...
@@ -109,11 +126,15 @@ if [[ ! "${keys[@]}" =~ "usersync" ]] && g3kubectl get cronjob usersync >/dev/nu
     gen3 job cron usersync "$ustart * * * *"
 fi
 
+gen3_log_info "setup sheepdog"
+
 if g3k_manifest_lookup .versions.sheepdog 2> /dev/null; then
   gen3 kube-setup-sheepdog &
 else
   gen3_log_info "not deploying sheepdog - no manifest entry for .versions.sheepdog"
 fi
+
+gen3_log_info "setup peregrine"
 
 if g3k_manifest_lookup .versions.peregrine 2> /dev/null; then
   gen3 kube-setup-peregrine &
@@ -121,11 +142,15 @@ else
   gen3_log_info "not deploying peregrine - no manifest entry for .versions.peregrine"
 fi
 
+gen3_log_info "setup arranger"
+
 if g3k_manifest_lookup .versions.arranger 2> /dev/null; then
   gen3 kube-setup-arranger &
 else
   gen3_log_info "not deploying arranger - no manifest entry for .versions.arranger"
 fi
+
+gen3_log_info "setup spark"
 
 if g3k_manifest_lookup .versions.spark 2> /dev/null; then
   #
@@ -138,17 +163,23 @@ else
   gen3_log_info "not deploying spark (required for ES ETL) - no manifest entry for .versions.spark"
 fi
 
+gen3_log_info "setup guppy"
+
 if g3k_manifest_lookup .versions.guppy 2> /dev/null; then
   gen3 kube-setup-guppy
 else
   gen3_log_info "not deploying guppy - no manifest entry for .versions.guppy"
 fi
 
+gen3_log_info "setup pidgin"
+
 if g3k_manifest_lookup .versions.pidgin 2> /dev/null; then
   gen3 kube-setup-pidgin &
 else
   gen3_log_info "not deploying pidgin - no manifest entry for .versions.pidgin"
 fi
+
+gen3_log_info "deploy portal"
 
 if g3k_manifest_lookup .versions.portal > /dev/null 2>&1; then
   #
@@ -160,11 +191,15 @@ if g3k_manifest_lookup .versions.portal > /dev/null 2>&1; then
   g3kubectl apply -f "${GEN3_HOME}/kube/services/portal/portal-service.yaml" &
 fi
 
+gen3_log_info "deploy wts service"
+
 if g3k_manifest_lookup .versions.wts 2> /dev/null; then
   # go ahead and deploy the service, so the revproxy setup sees it
   g3kubectl apply -f "${GEN3_HOME}/kube/services/wts/wts-service.yaml" &
   # wait till after fence is up to do a full setup - see below
 fi
+
+gen3_log_info "setup manifestservice"
 
 if g3k_manifest_lookup .versions.manifestservice 2> /dev/null; then
   gen3 kube-setup-manifestservice &
@@ -172,11 +207,15 @@ else
   gen3_log_info "not deploying manifestservice - no manifest entry for .versions.manifestservice"
 fi
 
+gen3_log_info "setup ambassador"
+
 if g3k_manifest_lookup .versions.ambassador 2> /dev/null; then
   gen3 kube-setup-ambassador &
 else
   gen3_log_info "not deploying ambassador - no manifest entry for .versions.ambassador"
 fi
+
+gen3_log_info "setup dashboard"
 
 if g3k_manifest_lookup .versions.dashboard > /dev/null 2>&1; then
   gen3 kube-setup-dashboard
@@ -185,11 +224,15 @@ else
   gen3_log_info "not deploying dashboard - no manifest entry for .versions.dashboard"
 fi
 
+gen3_log_info "setup hatchery"
+
 if g3k_manifest_lookup .versions.hatchery 2> /dev/null; then
   gen3 kube-setup-hatchery &
 else
   gen3_log_info "not deploying hatchery - no manifest entry for .versions.hatchery"
 fi
+
+gen3_log_info "setup jupyterhub"
 
 if g3k_manifest_lookup .versions.hatchery 2> /dev/null && g3kubectl get statefulset jupyterhub-deployment > /dev/null 2>&1; then
   gen3_log_info "deleting jupyterhub-deployment because Hatchery is deployed"
@@ -201,11 +244,15 @@ if g3k_manifest_lookup .versions.hatchery 2> /dev/null && g3kubectl get service 
   g3kubectl delete service jupyterhub-service || true
 fi
 
+gen3_log_info "setup sower"
+
 if g3k_manifest_lookup .versions.sower 2> /dev/null; then
   gen3 kube-setup-sower &
 else
   gen3_log_info "not deploying sower - no manifest entry for .versions.sower"
 fi
+
+gen3_log_info "setup requestor"
 
 if g3k_manifest_lookup .versions.requestor 2> /dev/null; then
   gen3 kube-setup-requestor &
@@ -213,11 +260,17 @@ else
   gen3_log_info "not deploying requestor - no manifest entry for .versions.requestor"
 fi
 
+gen3_log_info "setup metadata"
+
 gen3 kube-setup-metadata &
+
+gen3_log_info "setup ssjdispatcher"
 
 if g3k_manifest_lookup .versions.ssjdispatcher 2>&1 /dev/null; then
   gen3 kube-setup-ssjdispatcher &
 fi
+
+gen3_log_info "setup access backend"
 
 if g3k_manifest_lookup '.versions["access-backend"]' 2> /dev/null; then
   gen3 kube-setup-access-backend &
@@ -225,11 +278,15 @@ else
   gen3_log_info "not deploying access-backend - no manifest entry for .versions.access-backend"
 fi
 
+gen3_log_info "setup audit service"
+
 if g3k_manifest_lookup '.versions["audit-service"]' 2> /dev/null; then
   gen3 kube-setup-audit-service &
 else
   gen3_log_info "not deploying audit-service - no manifest entry for .versions.audit-service"
 fi
+
+gen3_log_info "setup revproxy"
 
 gen3 kube-setup-revproxy &
 
@@ -246,6 +303,8 @@ if [[ "$GEN3_ROLL_FAST" != "true" ]]; then
 else
   gen3_log_info "roll fast mode - skipping k8s base services and netpolicy setup"
 fi
+
+gen3_log_info "now we wait for pods..."
 
 #
 # portal and wts are not happy until other services are up

@@ -77,16 +77,16 @@ module "fence-bot-user" {
 #  }
 #}
 
+# NIEHS - remove
+#resource "aws_internet_gateway" "gw" {
+#  vpc_id = "${var.aws_vpc_main_id}"
 
-resource "aws_internet_gateway" "gw" {
-  vpc_id = "${var.aws_vpc_main_id}"
-
-  tags = {
-    Name         = "${var.vpc_name}-igw"
-    Environment  = "${var.vpc_name}"
-    Organization = "${var.organization_name}"
-  }
-}
+ # tags = {
+ #   Name         = "${var.vpc_name}-igw"
+ #   Environment  = "${var.vpc_name}"
+ #   Organization = "${var.organization_name}"
+ # }
+# }
 
 resource "aws_nat_gateway" "nat_gw" {
   allocation_id = "${aws_eip.nat_gw.id}"
@@ -101,18 +101,11 @@ resource "aws_nat_gateway" "nat_gw" {
 
 resource "aws_route_table" "public" {
   vpc_id = "${var.aws_vpc_main_id}"
-
+  
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.gw.id}"
+    gateway_id = "${var.aws_internet_gateway_id}"
   }
-
-  # NIEHS: remove
-  #route {
-    #from the commons vpc to the csoc vpc via the peering connection
-    #cidr_block                = "${var.peering_cidr}"
-    #vpc_peering_connection_id = "${aws_vpc_peering_connection.vpcpeering.id}"
-  #}
 
   tags = {
     Name         = "main"
@@ -132,8 +125,8 @@ resource "aws_eip" "nat_gw" {
 }
 
 
-resource "aws_default_route_table" "default" {
-  default_route_table_id = "${var.aws_vpc_main_default_route_table_id}"
+#resource "aws_default_route_table" "default" {
+#  default_route_table_id = "${var.aws_vpc_main_default_route_table_id}"
 
   # NIEHS: remove
   #route {
@@ -142,23 +135,23 @@ resource "aws_default_route_table" "default" {
   #  vpc_peering_connection_id = "${aws_vpc_peering_connection.vpcpeering.id}"
   #}
 
-  tags = {
-    Name         = "default table"
-    Environment  = "${var.vpc_name}"
-    Organization = "${var.organization_name}"
-  }
-}
+#  tags = {
+#    Name         = "default table"
+#    Environment  = "${var.vpc_name}"
+#    Organization = "${var.organization_name}"
+#  }
+#}
 
-resource "aws_main_route_table_association" "default" {
-  vpc_id         = "${var.aws_vpc_main_id}"
-  route_table_id = "${aws_default_route_table.default.id}"
-}
+# NIEHS-remove
+#resource "aws_main_route_table_association" "default" {
+#  vpc_id         = "${var.aws_vpc_main_id}"
+#  route_table_id = "${aws_default_route_table.default.id}"
+#}
 
 resource "aws_route_table_association" "public" {
   subnet_id      = "${aws_subnet.public.id}"
   route_table_id = "${aws_route_table.public.id}"
 }
-
 
 resource "aws_subnet" "public" {
   vpc_id                  = "${var.aws_vpc_main_id}"
@@ -208,7 +201,7 @@ resource "aws_cloudwatch_log_subscription_filter" "csoc_subscription" {
   }
 }
 
-
+# TODO: NIEHS remove route53
 resource "aws_route53_zone" "main" {
   name    = "internal.io"
   comment = "internal dns server for ${var.vpc_name}"

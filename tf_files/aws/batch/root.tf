@@ -41,7 +41,7 @@ resource "aws_route_table" "new_route" {
   vpc_id = "${aws_vpc.new_vpc.id}"
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.gw.id}"
+    gateway_id = "${var.aws_internet_gateway_id}"
   }
   tags = {
     Organization = "gen3",

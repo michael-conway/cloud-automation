@@ -33,8 +33,9 @@ resource "aws_db_instance" "db_fence" {
     Organization              = "${var.organization_name}"
   } 
 
+  # NIEHS: turning resource protection off
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
     #ignore_changes  = ["*"]
     ignore_changes = ["engine_version","storage_encrypted","identifier"]
   }
@@ -70,8 +71,9 @@ resource "aws_db_instance" "db_gdcapi" {
     Organization              = "${var.organization_name}"
   }
 
+  # NIEHS: turning resource protection off
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
     #ignore_changes  = ["*"]
     ignore_changes = ["engine_version","storage_encrypted","identifier"]
   }
@@ -107,8 +109,9 @@ resource "aws_db_instance" "db_indexd" {
     Organization              = "${var.organization_name}"
   }
 
+  # NIEHS: turning resource protection off
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
     #ignore_changes  = ["*"]
     ignore_changes = ["engine_version","storage_encrypted","identifier"]
   }

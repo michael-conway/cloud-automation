@@ -41,10 +41,10 @@ data "aws_nat_gateway" "the_gateway" {
 
 # Also let's allow comminication through the peering
 # NIEHS: remove
-data "aws_vpc_peering_connection" "pc" {
-  vpc_id = "${data.aws_vpc.the_vpc.id}"
-  status = "active"
-}
+#data "aws_vpc_peering_connection" "pc" {
+#  vpc_id = "${data.aws_vpc.the_vpc.id}"
+#  status = "active"
+#}
 
 
 # data resources for endpoints 

@@ -7,7 +7,8 @@ resource "aws_security_group" "local" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["${var.vpc_cidr_block}", "${var.peering_cidr}"]
+    #NIEHS - no peering cidr_blocks = ["${var.vpc_cidr_block}", "${var.peering_cidr}"]
+    cidr_blocks = ["${var.vpc_cidr_block}"]
   }
 
   egress {

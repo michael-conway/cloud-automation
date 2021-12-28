@@ -80,7 +80,7 @@ resource "random_shuffle" "az" {
   #input = ["${data.aws_availability_zones.available.names}"]
   #input = "${length(var.availability_zones) > 0 ? var.availability_zones : data.aws_autoscaling_group.squid_auto.availability_zones }"
   input = "${var.availability_zones}"
-  result_count = 3
+  result_count = 2
   count = 1
 }
 
@@ -90,7 +90,8 @@ resource "aws_subnet" "eks_private" {
   count                   = "${random_shuffle.az.result_count}"
   vpc_id                  = "${data.aws_vpc.the_vpc.id}"
   #cidr_block              = "${var.workers_subnet_size == 23 ? cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 3 , ( 2 + count.index )) : cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 4 , ( 7 + count.index )) }"
-  cidr_block              = "${var.workers_subnet_size == 22 ? cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 2 , ( 1 + count.index )) : var.workers_subnet_size == 23 ? cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 3 , ( 2 + count.index )) : cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 4 , ( 7 + count.index )) }"
+  #cidr_block              = "${var.workers_subnet_size == 22 ? cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 2 , ( 1 + count.index )) : var.workers_subnet_size == 23 ? cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 3 , ( 2 + count.index )) : cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 4 , ( 7 + count.index )) }"
+  cidr_block               = "${cidrsubnet("${var.eks_private}", 3, (2 + count.index))}"
   availability_zone       = "${random_shuffle.az.result[count.index]}"
   map_public_ip_on_launch = false
 
@@ -117,7 +118,8 @@ resource "aws_subnet" "eks_public" {
   count                   = "${random_shuffle.az.result_count}"
   vpc_id                  = "${data.aws_vpc.the_vpc.id}"
   #cidr_block              = "${cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 4 , ( 10 + count.index ))}"
-  cidr_block              = "${var.workers_subnet_size == 22 ? cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 5 , ( 4 + count.index )) : cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 4 , ( 10 + count.index ))}"
+  #cidr_block              = "${var.workers_subnet_size == 22 ? cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 5 , ( 4 + count.index )) : cidrsubnet(data.aws_vpc.the_vpc.cidr_block, 4 , ( 10 + count.index ))}"
+  cidr_block               = "${cidrsubnet("${var.eks_public}", 3, (2 + count.index))}"
   map_public_ip_on_launch = true
   availability_zone       = "${random_shuffle.az.result[count.index]}"
 
@@ -155,14 +157,6 @@ resource "aws_route_table" "eks_private" {
   }
 }
 
-# NIEHS: remove for peering
-resource "aws_route" "for_peering" {
-  route_table_id            = "${aws_route_table.eks_private.id}"
-  destination_cidr_block    = "${var.peering_cidr}"
-  vpc_peering_connection_id = "${data.aws_vpc_peering_connection.pc.id}"
-}
-
-
 resource "aws_route" "skip_proxy" {
   count                  = "${length(var.cidrs_to_route_to_gw)}"
   route_table_id         = "${aws_route_table.eks_private.id}"
@@ -178,6 +172,22 @@ resource "aws_route" "public_access" {
   instance_id            = "${data.aws_instances.squid_proxy.ids[0]}"
 }
 
+
+# NIEHS - need to have workers talk to control plane - mc
+#resource "aws_route" "niehs_workers_to_control_plane" {
+#  route_table_id            = "${aws_route_table.eks_private.id}"
+#  destination_cidr_block    = "${var.peering_cidr}" # FIXME: control plane cidr? BOO!
+#  vpc_peering_connection_id = "${data.aws_vpc_peering_connection.pc.id}"
+#}
+
+# NIEHS: remove for peering
+#resource "aws_route" "for_peering" {
+#  route_table_id            = "${aws_route_table.eks_private.id}"
+#  destination_cidr_block    = "${var.peering_cidr}"
+#  vpc_peering_connection_id = "${data.aws_vpc_peering_connection.pc.id}"
+#}
+
+ 
 resource "aws_route_table_association" "private_kube" {
   count          = "${random_shuffle.az.result_count}"
   subnet_id      = "${aws_subnet.eks_private.*.id[count.index]}"
@@ -185,7 +195,7 @@ resource "aws_route_table_association" "private_kube" {
   depends_on     = ["aws_subnet.eks_private"]
 }
 
-
+# NIEHS: might need to add a rule for EKS
 resource "aws_security_group" "eks_control_plane_sg" {
   name        = "${var.vpc_name}-control-plane"
   description = "Cluster communication with worker nodes [${var.vpc_name}]"
@@ -204,9 +214,6 @@ resource "aws_security_group" "eks_control_plane_sg" {
     Organization = "${var.organization_name}"
   }
 }
-
-
-
 
 resource "aws_route_table_association" "public_kube" {
   count          = "${random_shuffle.az.result_count}"
@@ -418,6 +425,7 @@ resource "aws_security_group_rule" "https_nodes_to_plane" {
 }
 
 # Control plane to the workers
+## TODO: why is this 80 and not 443?...adding a secondary rule to do this to test - mc
 resource "aws_security_group_rule" "communication_plane_to_nodes" {
   type                     = "ingress"
   from_port                = 80

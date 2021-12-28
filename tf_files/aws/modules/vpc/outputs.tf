@@ -28,7 +28,7 @@ output "public_route_table_id" {
 }
 
 output "gateway_id" {
-  value = "${aws_internet_gateway.gw.id}"
+  value = "${var.aws_internet_gateway_id}"
 }
 
 output "public_subnet_id" {
