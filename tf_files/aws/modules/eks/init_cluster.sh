@@ -7,12 +7,11 @@ if [ -f "$${GEN3_HOME}/gen3/gen3setup.sh" ]; then
   source "$${GEN3_HOME}/gen3/gen3setup.sh"
 fi
 
-
 calico=$${calico:-1.7.5}
 
 echo $calico
 
-my_calico_yaml="https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/v$${calico}/config/v$(echo $${calico}"
+my_calico_yaml="https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/v$${calico}/config/v$(echo $${calico})"
 
 echo $my_calico_yaml
 

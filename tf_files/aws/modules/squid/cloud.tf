@@ -9,7 +9,7 @@
 #    Environment = "${var.env_vpc_name}"
 #  }
 #}
-
+# NIEHS - deploy_single_proxy defaults to false-mc
 ###############################################################
 # IAM
 ###############################################################
@@ -196,10 +196,7 @@ resource "aws_instance" "proxy" {
   monitoring             = true
   source_dest_check      = false
   key_name               = "${var.ssh_key_name}"
-  vpc_security_group_ids = ["${aws_security_group.proxy.id}", "${aws_security_group.login-ssh.id}", "${aws_security_group.out.id}"]
-#  iam_instance_profile   = "${var.env_instance_profile}" 
-  iam_instance_profile   = "${aws_iam_instance_profile.cluster_logging_cloudwatch.name}"
-
+ t
   tags = {
     Name         = "${var.env_vpc_name} HTTP Proxy"
     Environment  = "${var.env_vpc_name}"

@@ -201,7 +201,7 @@ resource "aws_cloudwatch_log_subscription_filter" "csoc_subscription" {
   }
 }
 
-
+# TODO: NIEHS remove route53
 resource "aws_route53_zone" "main" {
   name    = "internal.io"
   comment = "internal dns server for ${var.vpc_name}"
