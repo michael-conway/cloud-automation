@@ -8,8 +8,11 @@ source "${GEN3_HOME}/gen3/lib/utils.sh"
 gen3_load "gen3/lib/kube-setup-init"
 gen3_load "gen3/lib/g3k_manifest"
 
+gen3_log_info "in kube-setup-secrets.sh! doing config helper.py"
 
 gen3 update_config config-helper "${GEN3_HOME}/apis_configs/config_helper.py"
+
+gen3_log_info "finished that..continuing"
 
 if ! g3kubectl get configmaps/logo-config > /dev/null 2>&1; then
   #
@@ -59,6 +62,10 @@ fi
 #
 # Setup the files that will become secrets in "$(gen3_secrets_folder)/apis_configs"
 #
+
+
+gen3_log_info "in kube-setup-secrets.sh! doing config helper.py"
+
 mkdir -p "$(gen3_secrets_folder)/apis_configs"
 cd "$(gen3_secrets_folder)"
 
@@ -70,6 +77,9 @@ if ! g3kubectl get configmaps global > /dev/null 2>&1; then
     exit 1
   fi
 fi
+
+
+gen3_log_info "update creds.json with fenceIndexdPassword..."
 
 # Check if the `fence` indexd user has been configured
 fenceIndexdPassword="$(jq -r .fence.indexd_password < creds.json)"
@@ -109,6 +119,8 @@ if [[ -z "$fenceIndexdPassword" || "null" == "$fenceIndexdPassword" ]]; then
   /bin/rm -rf .rendered_indexd_userdb
 fi
 
+gen3_log_info "about to update aws-es-proxy secrets"
+   
 # update aws-es-proxy secrets
 if ! g3kubectl get secrets/aws-es-proxy > /dev/null 2>&1; then
   credsFile=$(mktemp -p "$XDG_RUNTIME_DIR" "creds.json_XXXXXX")
@@ -126,11 +138,16 @@ if ! g3kubectl get secrets/aws-es-proxy > /dev/null 2>&1; then
   rm "$credsFile"
 fi
 
+gen3_log_info "pausing after that for gen3 secrets synch"
 
 if gen3_time_since secrets_sync is 120; then
   gen3_log_info "gen3 secrets sync"
   gen3 secrets sync || true
 fi
+
+
+gen3_log_info "bnow trying to create jwt-keys and ssh-keys dirs"
+
 
 # Generate RSA private and public keys.
 # TODO: generalize to list of key names?
