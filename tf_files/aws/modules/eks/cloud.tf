@@ -207,6 +207,14 @@ resource "aws_security_group" "eks_control_plane_sg" {
     protocol        = "-1"
     cidr_blocks     = ["0.0.0.0/0"]
   }
+  # NIEHS: allow ingress from cloud automation box to the eks control plane - cloud_auto_cidr
+  ingress {
+    description      = "TLS from VPC"
+    from_port        = 443
+    to_port          = 443
+    protocol         = "tcp"
+    cidr_blocks      = ["${var.cloud_auto_cidr}"]
+  }
   
   tags = {
     Name         = "${var.vpc_name}-control-plane-sg"
