@@ -196,7 +196,6 @@ resource "aws_instance" "proxy" {
   monitoring             = true
   source_dest_check      = false
   key_name               = "${var.ssh_key_name}"
- t
   tags = {
     Name         = "${var.env_vpc_name} HTTP Proxy"
     Environment  = "${var.env_vpc_name}"
