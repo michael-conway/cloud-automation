@@ -30,7 +30,7 @@ fi
 if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
   # -E passes through *_proxy environment
   sudo -E apt-get update
-  sudo -E apt-get install -y git jq pwgen python-dev python-pip unzip python3-dev python3-pip python3-venv 
+  sudo -E apt-get install -y git jq pwgen python-dev python-pip unzip python3-dev python3-pip python3-venv npm
   
   ( # subshell
     # install aws cli v2 - https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
@@ -70,7 +70,7 @@ if sudo -n true > /dev/null 2>&1 && [[ $(uname -s) == "Linux" ]]; then
   # jinja2 needed by render_creds.py
   sudo -E XDG_CACHE_HOME=/var/cache python3 -m pip install jinja2
   # yq === jq for yaml
-  sudo -E XDG_CACHE_HOME=/var/cache python3 -m pip install yq
+  sudo -E XDG_CACHE_HOME=/var/cache python3 -m pip install yq --ignore-installed PyYAML
 
   # install nodejs
   if ! which node > /dev/null 2>&1; then
@@ -323,6 +323,7 @@ fi
 (
   cd "$GEN3_HOME"
   if [[ -f ./package.json ]]; then
+    sudo -E apt-get install -y npm
     npm install || true
   fi
 )
