@@ -133,5 +133,5 @@ variable "eks_public" {
 }
 
 variable "cloud_auto_cidr" {
-   default = "172.31.20.0/24"
+   default = "172.31.10.0/24"
 }
