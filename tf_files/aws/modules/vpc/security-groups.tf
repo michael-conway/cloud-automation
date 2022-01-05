@@ -11,6 +11,14 @@ resource "aws_security_group" "local" {
     cidr_blocks = ["${var.vpc_cidr_block}"]
   }
 
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    #NIEHS - add eks_private block rule
+    cidr_blocks = ["${var.eks_private_cidr_block}"]
+  }
+
   egress {
     from_port = 0
     to_port   = 0

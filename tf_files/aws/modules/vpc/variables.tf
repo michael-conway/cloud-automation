@@ -142,3 +142,7 @@ variable "aws_internet_gateway_id" {
   description = "internet gateway id"
   default = "igw-08ee4a556301f736c"
 }
+
+variable "eks_private_cidr_block" {
+  default = "172.31.19.0/24"
+}
